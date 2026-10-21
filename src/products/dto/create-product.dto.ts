@@ -1,6 +1,7 @@
 import {
   IsBoolean,
-  IsNumber,
+  IsInt,
+  Max,
   IsOptional,
   IsString,
   Min,
@@ -16,8 +17,9 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
-  @IsNumber()
+  @IsInt()
   @Min(0)
+  @Max(1000000000)
   price: number;
 
   @IsOptional()
@@ -25,8 +27,9 @@ export class CreateProductDto {
   imageUrl?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt()
   @Min(0)
+  @Max(1000000)
   stock?: number;
 
   @IsOptional()

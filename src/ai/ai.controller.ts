@@ -4,7 +4,10 @@ import {
   Body,
   Controller,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { Throttle } from '@nestjs/throttler';
 import { AiService } from './ai.service';
 
 interface ChatHistoryItem {
@@ -18,6 +21,8 @@ interface ChatRequest {
 }
 
 @Controller('ai')
+@UseGuards(AuthGuard)
+@Throttle({ default: { limit: 15, ttl: 60000 } })
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 

@@ -15,13 +15,7 @@ export class AiService {
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
 
-    if (!apiKey || apiKey === 'PASTE_YOUR_NEW_KEY_HERE') {
-      throw new Error(
-        'GEMINI_API_KEY chưa được cấu hình trong file .env',
-      );
-    }
-
-    this.genAI = new GoogleGenerativeAI(apiKey);
+    this.genAI = new GoogleGenerativeAI(apiKey || 'not-configured');
     this.modelName =
       this.configService.get<string>('GEMINI_MODEL') ||
       'gemini-flash-latest';
@@ -31,6 +25,9 @@ export class AiService {
     message: string,
     history: { role: 'user' | 'model'; content: string }[] = [],
   ): Promise<string> {
+    if (!this.configService.get<string>('GEMINI_API_KEY')) {
+      throw new ServiceUnavailableException('AI chưa được cấu hình trên server.');
+    }
     try {
       const model = this.genAI.getGenerativeModel({
         model: this.modelName,
@@ -88,7 +85,7 @@ Giúp khách hàng tìm được sản phẩm phù hợp bằng thông tin chín
 
       return reply;
     } catch (error) {
-      console.error('Gemini request failed:', error);
+      console.error('Gemini request failed; request details redacted.');
 
       const messageText =
         error instanceof Error ? error.message : String(error);

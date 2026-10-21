@@ -17,4 +17,47 @@ model Product {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  category    String?
+  rating      Float?
+  orderItems  OrderItem[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  orders       Order[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  requestId       String
+  status          String      @default("PENDING")
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  totalAmount     Int
+  shippingFee     Int
+  discount        Int         @default(0)
+  createdAt       DateTime    @default(now())
+  paidAt          DateTime?
+  items           OrderItem[]
+  @@unique([userId, requestId])
+  @@index([userId, createdAt])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order @relation(fields: [orderId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  name      String
+  image     String
+  price     Int
+  quantity  Int
 }
