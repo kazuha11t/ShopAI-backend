@@ -16,7 +16,9 @@ Dữ liệu lưu bằng Prisma và SQLite; AI được gọi từ server để g
 
 ## Khởi động trên máy mới
 
-Cần Node.js 22 (từ 22.13) hoặc 24 (từ 24.3), npm. Các lệnh dưới đây dùng PowerShell.
+Cần Node.js 24.9 trở lên và npm; CI dùng Node.js 24. Bộ test Jest cần phiên bản
+này để nạp các dependency ESM của NestJS. File `.nvmrc` chọn nhánh Node 24.
+Các lệnh dưới đây dùng PowerShell.
 
 ```powershell
 git clone https://github.com/kazuha11t/ShopAI-backend.git shopai-backend
